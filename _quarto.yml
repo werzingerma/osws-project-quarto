@@ -1,0 +1,85 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "reports/*.qmd"
+    - "!_*.qmd"
+
+website:
+  title: "PRECISION Reports"
+  description: "Open-Source Workflow für wissenschaftliche Berichte"
+  site-url: https://YOUR-USERNAME.github.io/osws-project-quarto/
+  repo-url: https://github.com/YOUR-USERNAME/osws-project-quarto
+  repo-actions: [edit, issue]
+
+  navbar:
+    background: "#1a365d"
+    foreground: "#ffffff"
+    logo: assets/images/precision-logo.png
+    left:
+      - href: index.qmd
+        text: Home
+      - href: guide.qmd
+        text: Anleitung
+      - href: reports/index.qmd
+        text: Berichte
+      - href: notebooks.qmd
+        text: Notebooks
+    right:
+      - icon: github
+        href: https://github.com/YOUR-USERNAME/osws-project-quarto
+
+  sidebar:
+    - title: "Berichte"
+      style: "docked"
+      search: true
+      contents:
+        - reports/index.qmd
+        - section: "Beispielberichte"
+          contents:
+            - reports/beispiel-analyse.qmd
+            - reports/patient-statistics.qmd
+
+  page-footer:
+    left: "PRECISION Project - Open Source Workflow"
+    right:
+      - icon: github
+        href: https://github.com/YOUR-USERNAME/osws-project-quarto
+    center: "Erstellt mit [Quarto](https://quarto.org)"
+
+format:
+  html:
+    theme:
+      light: [flatly, assets/css/precision-theme.scss]
+    css: assets/css/custom.css
+    toc: true
+    toc-depth: 3
+    toc-location: right
+    code-fold: true
+    code-tools: true
+    code-copy: true
+    highlight-style: github
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+
+execute:
+  freeze: auto
+  cache: true
+
+# Bibliographie-Einstellungen
+bibliography: references.bib
+csl: assets/apa.csl
+cite-method: citeproc
+
+# Globale Optionen für Jupyter
+jupyter: python3
+
+# Knitr-Optionen (falls R verwendet wird)
+knitr:
+  opts_chunk:
+    echo: true
+    message: false
+    warning: false
+    fig-align: center

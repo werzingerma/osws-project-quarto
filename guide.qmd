@@ -1,0 +1,316 @@
+---
+title: "Schritt-für-Schritt Anleitung"
+subtitle: "So nutzt du den PRECISION Open-Source-Workflow"
+toc: true
+toc-depth: 3
+---
+
+## Übersicht
+
+Diese Anleitung führt dich durch den kompletten Workflow - von der Installation bis zur automatischen Veröffentlichung deiner Berichte.
+
+::: {.callout-tip}
+## Zeitaufwand
+Die initiale Einrichtung dauert ca. 30-60 Minuten. Danach ist das Erstellen neuer Berichte in wenigen Minuten erledigt.
+:::
+
+---
+
+## 1. Voraussetzungen installieren
+
+### 1.1 Git installieren
+
+::: {.panel-tabset}
+
+#### macOS
+```bash
+# Mit Homebrew
+brew install git
+
+# Oder Xcode Command Line Tools
+xcode-select --install
+```
+
+#### Windows
+Download von [git-scm.com](https://git-scm.com/download/win) und Installer ausführen.
+
+#### Linux
+```bash
+# Ubuntu/Debian
+sudo apt-get install git
+
+# Fedora
+sudo dnf install git
+```
+:::
+
+### 1.2 Python installieren
+
+Empfohlen: Python 3.10 oder höher
+
+::: {.panel-tabset}
+
+#### macOS
+```bash
+brew install python@3.11
+```
+
+#### Windows
+Download von [python.org](https://www.python.org/downloads/) - **"Add to PATH" aktivieren!**
+
+#### Linux
+```bash
+sudo apt-get install python3 python3-pip python3-venv
+```
+:::
+
+### 1.3 Quarto installieren
+
+Download von [quarto.org/docs/get-started](https://quarto.org/docs/get-started/)
+
+Nach der Installation testen:
+```bash
+quarto --version
+```
+
+---
+
+## 2. Repository einrichten
+
+### 2.1 Repository klonen
+
+```bash
+git clone https://github.com/YOUR-USERNAME/osws-project-quarto.git
+cd osws-project-quarto
+```
+
+### 2.2 Python-Umgebung erstellen
+
+```bash
+# Virtuelle Umgebung erstellen
+python -m venv .venv
+
+# Aktivieren
+# macOS/Linux:
+source .venv/bin/activate
+# Windows:
+.venv\Scripts\activate
+
+# Abhängigkeiten installieren
+pip install -r requirements.txt
+```
+
+### 2.3 Jupyter-Kernel registrieren
+
+```bash
+python -m ipykernel install --user --name=precision --display-name="PRECISION Python"
+```
+
+---
+
+## 3. Lokale Entwicklung
+
+### 3.1 Quarto Preview starten
+
+```bash
+quarto preview
+```
+
+Dies startet einen lokalen Webserver (meist `http://localhost:4000`) und aktualisiert automatisch bei Änderungen.
+
+### 3.2 Einzelne Datei rendern
+
+```bash
+# HTML
+quarto render reports/beispiel-analyse.qmd
+
+# PDF
+quarto render reports/beispiel-analyse.qmd --to pdf
+
+# Word
+quarto render reports/beispiel-analyse.qmd --to docx
+```
+
+### 3.3 Komplettes Projekt bauen
+
+```bash
+quarto render
+```
+
+---
+
+## 4. Neuen Bericht erstellen
+
+### Schritt 1: Datei anlegen
+
+Erstelle eine neue `.qmd`-Datei in `reports/`:
+
+```markdown
+---
+title: "Mein neuer Bericht"
+author: "Dein Name"
+date: today
+format:
+  html:
+    code-fold: true
+  pdf:
+    toc: true
+---
+
+## Einleitung
+
+Dein Text hier...
+```
+
+### Schritt 2: Code einbinden
+
+```{{python}}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Daten laden
+df = pd.read_csv('../data/sample/patient_data.csv')
+
+# Visualisierung
+df['age'].hist()
+plt.title('Altersverteilung')
+plt.show()
+```
+
+### Schritt 3: Navigation aktualisieren
+
+Füge den Bericht zu `_quarto.yml` hinzu:
+
+```yaml
+website:
+  sidebar:
+    contents:
+      - reports/index.qmd
+      - section: "Berichte"
+        contents:
+          - reports/dein-neuer-bericht.qmd  # NEU
+```
+
+---
+
+## 5. Änderungen veröffentlichen
+
+### 5.1 Änderungen committen
+
+```bash
+# Status prüfen
+git status
+
+# Dateien hinzufügen
+git add .
+
+# Commit erstellen
+git commit -m "Neuer Bericht: Analyse XY"
+
+# Pushen
+git push origin main
+```
+
+### 5.2 Automatische Veröffentlichung
+
+Nach dem Push passiert automatisch:
+
+1. **GitHub Action** wird gestartet
+2. **Quarto rendert** alle Dokumente
+3. **GitHub Pages** wird aktualisiert
+4. **Bericht ist online** verfügbar
+
+::: {.callout-note}
+## Dauer
+Die automatische Veröffentlichung dauert ca. 2-5 Minuten.
+:::
+
+---
+
+## 6. Workflow-Diagramm
+
+```{mermaid}
+flowchart LR
+    A[Jupyter Notebook] --> B[.qmd Datei]
+    B --> C[git push]
+    C --> D[GitHub Action]
+    D --> E[Quarto Render]
+    E --> F[GitHub Pages]
+    F --> G[Online Report]
+
+    style A fill:#3182ce,color:#fff
+    style G fill:#38a169,color:#fff
+```
+
+---
+
+## 7. Tipps & Best Practices
+
+### Code-Qualität
+
+- **Reproduzierbarkeit**: Setze Random Seeds (`np.random.seed(42)`)
+- **Relative Pfade**: Verwende `../data/` statt absolute Pfade
+- **Kommentare**: Erkläre komplexe Berechnungen
+
+### Dateiorganisation
+
+| Ordner | Inhalt |
+|--------|--------|
+| `notebooks/` | Explorative Analysen, Entwicklung |
+| `reports/` | Finale, publizierbare Berichte |
+| `data/sample/` | Beispieldaten (keine sensiblen Daten!) |
+| `assets/images/` | Generierte Grafiken |
+
+### Git-Workflow
+
+```bash
+# Neuer Feature-Branch
+git checkout -b feature/neue-analyse
+
+# Arbeit erledigen...
+git add .
+git commit -m "Beschreibende Nachricht"
+
+# Branch pushen
+git push -u origin feature/neue-analyse
+
+# Pull Request auf GitHub erstellen
+```
+
+---
+
+## 8. Häufige Probleme
+
+::: {.callout-warning}
+### Problem: "Quarto not found"
+**Lösung**: Stelle sicher, dass Quarto im PATH ist. Nach der Installation Terminal neu starten.
+:::
+
+::: {.callout-warning}
+### Problem: "No module named 'pandas'"
+**Lösung**: Virtuelle Umgebung aktivieren und `pip install -r requirements.txt` ausführen.
+:::
+
+::: {.callout-warning}
+### Problem: GitHub Pages zeigt 404
+**Lösung**: In Repository Settings → Pages → Source auf "GitHub Actions" setzen.
+:::
+
+---
+
+## 9. Nächste Schritte
+
+Wenn du den Basis-Workflow beherrschst:
+
+1. **Journal-Templates** für Publikationen einrichten
+2. **Parametrisierte Reports** für verschiedene Datensätze
+3. **CI/CD erweitern** mit Tests und Linting
+4. **Literaturverwaltung** mit Zotero/BibTeX
+
+---
+
+## Hilfe & Support
+
+- **Quarto Dokumentation**: [quarto.org/docs](https://quarto.org/docs/)
+- **GitHub Actions**: [docs.github.com/actions](https://docs.github.com/en/actions)
+- **PRECISION Team**: Interne Kontaktdaten

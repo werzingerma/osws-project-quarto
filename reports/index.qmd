@@ -1,0 +1,20 @@
+---
+title: "Berichte"
+subtitle: "Alle PRECISION-Analysen und Reports"
+listing:
+  contents: "*.qmd"
+  type: grid
+  fields: [title, author, date, description]
+  sort: "date desc"
+  exclude:
+    - "index.qmd"
+---
+
+## Übersicht
+
+Hier findest du alle aktuellen Berichte des PRECISION-Projekts.
+
+::: {.callout-tip}
+## Automatische Updates
+Diese Seite wird automatisch aktualisiert, wenn neue Berichte hinzugefügt werden.
+:::

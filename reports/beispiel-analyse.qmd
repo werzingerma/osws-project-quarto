@@ -1,0 +1,251 @@
+---
+title: "Beispiel-Analyse: Patientendaten"
+author: "PRECISION Team"
+date: 2024-12-22
+description: "Explorative Datenanalyse der PRECISION-Beispieldaten"
+categories: [Analyse, Statistik]
+format:
+  html:
+    code-fold: true
+    code-summary: "Code anzeigen"
+execute:
+  warning: false
+  message: false
+---
+
+## Einleitung
+
+Dieser Bericht demonstriert den Open-Source-Workflow für wissenschaftliche Analysen im PRECISION-Projekt. Die hier verwendeten Daten sind **synthetisch** und dienen ausschließlich Demonstrationszwecken.
+
+::: {.callout-note}
+## Reproduzierbarkeit
+Alle Analysen in diesem Bericht sind vollständig reproduzierbar. Der Code ist direkt eingebettet und kann bei Bedarf angezeigt werden.
+:::
+
+## Datenübersicht
+
+```{python}
+#| label: setup
+#| code-fold: true
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from IPython.display import Markdown
+
+# PRECISION Farbpalette
+COLORS = {
+    'primary': '#1a365d',
+    'secondary': '#2c5282',
+    'accent': '#3182ce',
+    'success': '#38a169',
+    'warning': '#d69e2e',
+    'danger': '#e53e3e'
+}
+
+plt.style.use('seaborn-v0_8-whitegrid')
+plt.rcParams['figure.figsize'] = (10, 6)
+plt.rcParams['font.size'] = 11
+
+# Seed für Reproduzierbarkeit
+np.random.seed(42)
+```
+
+```{python}
+#| label: load-data
+
+# Synthetische Daten generieren (in Produktion: CSV laden)
+n = 200
+
+df = pd.DataFrame({
+    'patient_id': [f'PAT_{i:04d}' for i in range(1, n + 1)],
+    'age': np.random.normal(55, 15, n).astype(int).clip(18, 90),
+    'gender': np.random.choice(['M', 'F'], n, p=[0.52, 0.48]),
+    'bmi': np.random.normal(26, 5, n).round(1).clip(15, 45),
+    'blood_pressure_sys': np.random.normal(130, 20, n).astype(int).clip(90, 200),
+    'cholesterol': np.random.normal(200, 40, n).round(0).clip(100, 350),
+    'treatment_group': np.random.choice(['A', 'B', 'Placebo'], n, p=[0.4, 0.4, 0.2]),
+    'response': np.random.choice([0, 1], n, p=[0.35, 0.65])
+})
+```
+
+### Datensatz-Statistiken
+
+```{python}
+#| label: tbl-summary
+#| tbl-cap: "Deskriptive Statistik der numerischen Variablen"
+
+summary = df.describe().round(2).T
+summary[['count', 'mean', 'std', 'min', 'max']]
+```
+
+### Stichprobe
+
+```{python}
+#| label: tbl-sample
+#| tbl-cap: "Erste 10 Datensätze"
+
+df.head(10)
+```
+
+## Demografische Analyse
+
+### Altersverteilung
+
+```{python}
+#| label: fig-age
+#| fig-cap: "Altersverteilung der Studienpopulation"
+
+fig, ax = plt.subplots(figsize=(10, 5))
+
+ax.hist(df['age'], bins=20, color=COLORS['primary'], alpha=0.8, edgecolor='white')
+ax.axvline(df['age'].mean(), color=COLORS['danger'], linestyle='--', linewidth=2,
+           label=f'Mittelwert: {df["age"].mean():.1f} Jahre')
+ax.axvline(df['age'].median(), color=COLORS['warning'], linestyle=':', linewidth=2,
+           label=f'Median: {df["age"].median():.0f} Jahre')
+
+ax.set_xlabel('Alter (Jahre)')
+ax.set_ylabel('Anzahl Patienten')
+ax.set_title('Altersverteilung der Studienpopulation')
+ax.legend()
+
+plt.tight_layout()
+plt.show()
+```
+
+### Geschlechterverteilung nach Behandlungsgruppe
+
+```{python}
+#| label: fig-gender-group
+#| fig-cap: "Geschlechterverteilung nach Behandlungsgruppe"
+
+fig, ax = plt.subplots(figsize=(10, 5))
+
+gender_group = pd.crosstab(df['treatment_group'], df['gender'], normalize='index') * 100
+
+gender_group.plot(kind='bar', ax=ax, color=[COLORS['primary'], COLORS['accent']],
+                  alpha=0.8, edgecolor='white', width=0.7)
+
+ax.set_xlabel('Behandlungsgruppe')
+ax.set_ylabel('Anteil (%)')
+ax.set_title('Geschlechterverteilung nach Behandlungsgruppe')
+ax.legend(['Männlich', 'Weiblich'], title='Geschlecht')
+ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
+
+for container in ax.containers:
+    ax.bar_label(container, fmt='%.1f%%', padding=3)
+
+plt.tight_layout()
+plt.show()
+```
+
+## Klinische Parameter
+
+### BMI vs. Blutdruck
+
+```{python}
+#| label: fig-bmi-bp
+#| fig-cap: "Zusammenhang zwischen BMI und systolischem Blutdruck"
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+colors = df['response'].map({0: COLORS['danger'], 1: COLORS['success']})
+scatter = ax.scatter(df['bmi'], df['blood_pressure_sys'], c=colors, alpha=0.6, s=60)
+
+# Trendlinie
+z = np.polyfit(df['bmi'], df['blood_pressure_sys'], 1)
+p = np.poly1d(z)
+x_line = np.linspace(df['bmi'].min(), df['bmi'].max(), 100)
+ax.plot(x_line, p(x_line), color=COLORS['secondary'], linestyle='--', linewidth=2,
+        label=f'Trend (r={df["bmi"].corr(df["blood_pressure_sys"]):.2f})')
+
+ax.set_xlabel('BMI (kg/m²)')
+ax.set_ylabel('Systolischer Blutdruck (mmHg)')
+ax.set_title('BMI vs. Systolischer Blutdruck')
+
+# Custom Legend
+from matplotlib.patches import Patch
+legend_elements = [
+    Patch(facecolor=COLORS['success'], alpha=0.6, label='Responder'),
+    Patch(facecolor=COLORS['danger'], alpha=0.6, label='Non-Responder'),
+    plt.Line2D([0], [0], color=COLORS['secondary'], linestyle='--', label='Trendlinie')
+]
+ax.legend(handles=legend_elements, loc='upper left')
+
+plt.tight_layout()
+plt.show()
+```
+
+## Response-Analyse
+
+### Response-Rate nach Behandlungsgruppe
+
+```{python}
+#| label: fig-response
+#| fig-cap: "Response-Rate nach Behandlungsgruppe"
+
+response_rate = df.groupby('treatment_group')['response'].agg(['sum', 'count'])
+response_rate['rate'] = response_rate['sum'] / response_rate['count'] * 100
+
+fig, ax = plt.subplots(figsize=(10, 5))
+
+bars = ax.bar(response_rate.index, response_rate['rate'],
+              color=[COLORS['primary'], COLORS['accent'], COLORS['secondary']],
+              alpha=0.8, edgecolor='white', linewidth=2)
+
+ax.axhline(y=50, color='gray', linestyle='--', alpha=0.5, label='50% Referenz')
+ax.set_ylabel('Response-Rate (%)')
+ax.set_xlabel('Behandlungsgruppe')
+ax.set_title('Response-Rate nach Behandlungsgruppe')
+ax.set_ylim(0, 100)
+
+# Werte auf Balken
+for bar, (_, row) in zip(bars, response_rate.iterrows()):
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width()/2., height + 2,
+            f'{height:.1f}%\n(n={int(row["sum"])}/{int(row["count"])})',
+            ha='center', va='bottom', fontweight='bold')
+
+plt.tight_layout()
+plt.show()
+```
+
+### Statistische Zusammenfassung
+
+```{python}
+#| label: tbl-response-summary
+#| tbl-cap: "Response-Statistik nach Behandlungsgruppe"
+
+summary_table = df.groupby('treatment_group').agg(
+    N=('patient_id', 'count'),
+    Responder=('response', 'sum'),
+    Response_Rate=('response', lambda x: f"{x.mean()*100:.1f}%"),
+    Alter_MW=('age', lambda x: f"{x.mean():.1f}"),
+    BMI_MW=('bmi', lambda x: f"{x.mean():.1f}")
+).reset_index()
+
+summary_table.columns = ['Gruppe', 'N', 'Responder', 'Response-Rate', 'Alter (MW)', 'BMI (MW)']
+summary_table
+```
+
+## Fazit
+
+::: {.callout-important}
+## Wichtige Erkenntnisse
+
+1. **Studienpopulation**: `{python} len(df)` Patienten, ausgeglichene Geschlechterverteilung
+2. **Altersverteilung**: Mittelwert `{python} f"{df['age'].mean():.1f}"` Jahre
+3. **Response-Rate gesamt**: `{python} f"{df['response'].mean()*100:.1f}"`%
+4. **BMI-Blutdruck-Korrelation**: r = `{python} f"{df['bmi'].corr(df['blood_pressure_sys']):.2f}"`
+:::
+
+## Methoden
+
+- **Datenquelle**: Synthetische Beispieldaten
+- **Software**: Python 3.11, pandas, matplotlib, seaborn
+- **Reproduzierbarkeit**: Random Seed = 42
+
+---
+
+*Dieser Bericht wurde automatisch mit Quarto generiert.*

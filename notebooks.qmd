@@ -1,0 +1,89 @@
+---
+title: "Jupyter Notebooks"
+subtitle: "Analyse-Notebooks des PRECISION-Projekts"
+---
+
+## Verfügbare Notebooks
+
+Die folgenden Jupyter Notebooks enthalten die Analysen für das PRECISION-Projekt.
+
+::: {.callout-tip}
+## Nutzung
+Notebooks können lokal mit `jupyter lab` oder in VS Code bearbeitet werden. Nach Änderungen werden sie automatisch in die Quarto-Berichte integriert.
+:::
+
+### 01 - Datenexploration
+
+::: {.notebook-card}
+**[01_data_exploration.ipynb](notebooks/01_data_exploration.ipynb)**
+
+Grundlegende Exploration der PRECISION-Patientendaten:
+
+- Datenübersicht und Statistiken
+- Altersverteilung
+- BMI vs. Blutdruck Analyse
+- Behandlungsgruppen-Vergleich
+
+**Tags:** `Exploration` `Visualisierung` `Deskriptiv`
+:::
+
+### 02 - Statistische Analyse
+
+::: {.notebook-card}
+**[02_statistical_analysis.ipynb](notebooks/02_statistical_analysis.ipynb)**
+
+Statistische Tests und Modellierung:
+
+- Chi-Quadrat-Test (Response vs. Gruppe)
+- ANOVA (Alter nach Gruppe)
+- T-Tests (Responder vs. Non-Responder)
+- Logistische Regression
+
+**Tags:** `Statistik` `Hypothesentests` `Modellierung`
+:::
+
+### 03 - Visualisierungen
+
+::: {.notebook-card}
+**[03_visualization.ipynb](notebooks/03_visualization.ipynb)**
+
+Publikationsreife Grafiken:
+
+- Demografische Übersicht
+- Klinische Parameter
+- Response-Analyse
+- Zusammenfassende Infografik
+
+**Tags:** `Visualisierung` `Publikation` `Corporate Design`
+:::
+
+## Workflow
+
+```{mermaid}
+flowchart TD
+    A[01_data_exploration] --> B[Daten verstehen]
+    B --> C[02_statistical_analysis]
+    C --> D[Hypothesen testen]
+    D --> E[03_visualization]
+    E --> F[Publikationsreife Grafiken]
+    F --> G[Quarto Report]
+```
+
+## Lokale Ausführung
+
+```bash
+# Virtuelle Umgebung aktivieren
+source .venv/bin/activate
+
+# Jupyter starten
+jupyter lab notebooks/
+```
+
+## Best Practices
+
+| Empfehlung | Beschreibung |
+|------------|--------------|
+| **Seeds setzen** | `np.random.seed(42)` für Reproduzierbarkeit |
+| **Relative Pfade** | `../data/` statt absolute Pfade |
+| **Outputs löschen** | Vor Commit: "Clear All Outputs" |
+| **Dokumentieren** | Markdown-Zellen für Erklärungen |
