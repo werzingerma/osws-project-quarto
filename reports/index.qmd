@@ -2,12 +2,12 @@
 title: "Berichte"
 subtitle: "Alle PRECISION-Analysen und Reports"
 listing:
-  contents: "*.qmd"
+  contents:
+    - "beispiel-analyse.qmd"
+    - "patient-statistics.qmd"
   type: grid
   fields: [title, author, date, description]
   sort: "date desc"
-  exclude:
-    - "index.qmd"
 ---
 
 ## Übersicht
