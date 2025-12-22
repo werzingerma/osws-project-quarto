@@ -9,8 +9,8 @@ project:
 website:
   title: "PRECISION Reports"
   description: "Open-Source Workflow für wissenschaftliche Berichte"
-  site-url: https://YOUR-USERNAME.github.io/osws-project-quarto/
-  repo-url: https://github.com/YOUR-USERNAME/osws-project-quarto
+  site-url: https://werzingerma.github.io/osws-project-quarto/
+  repo-url: https://github.com/werzingerma/osws-project-quarto
   repo-actions: [edit, issue]
 
   navbar:
@@ -28,7 +28,7 @@ website:
         text: Notebooks
     right:
       - icon: github
-        href: https://github.com/YOUR-USERNAME/osws-project-quarto
+        href: https://github.com/werzingerma/osws-project-quarto
 
   sidebar:
     - title: "Berichte"
@@ -45,7 +45,7 @@ website:
     left: "PRECISION Project - Open Source Workflow"
     right:
       - icon: github
-        href: https://github.com/YOUR-USERNAME/osws-project-quarto
+        href: https://github.com/werzingerma/osws-project-quarto
     center: "Erstellt mit [Quarto](https://quarto.org)"
 
 format:
