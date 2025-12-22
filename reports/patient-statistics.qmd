@@ -226,4 +226,8 @@ pd.DataFrame(ae_data)
 
 ---
 
-*Bericht generiert am: `{python} pd.Timestamp.now().strftime('%d.%m.%Y %H:%M')`*
+```{python}
+#| echo: false
+from datetime import datetime
+print(f"*Bericht generiert am: {datetime.now().strftime('%d.%m.%Y %H:%M')}*")
+```

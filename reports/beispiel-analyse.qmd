@@ -231,14 +231,27 @@ summary_table
 
 ## Fazit
 
-::: {.callout-important}
+```{python}
+#| label: fazit-stats
+#| echo: false
+
+# Statistiken für Fazit berechnen
+n_patients = len(df)
+mean_age = df['age'].mean()
+response_rate_total = df['response'].mean() * 100
+bmi_bp_corr = df['bmi'].corr(df['blood_pressure_sys'])
+
+print(f"""
+::: {{.callout-important}}
 ## Wichtige Erkenntnisse
 
-1. **Studienpopulation**: `{python} len(df)` Patienten, ausgeglichene Geschlechterverteilung
-2. **Altersverteilung**: Mittelwert `{python} f"{df['age'].mean():.1f}"` Jahre
-3. **Response-Rate gesamt**: `{python} f"{df['response'].mean()*100:.1f}"`%
-4. **BMI-Blutdruck-Korrelation**: r = `{python} f"{df['bmi'].corr(df['blood_pressure_sys']):.2f}"`
+1. **Studienpopulation**: {n_patients} Patienten, ausgeglichene Geschlechterverteilung
+2. **Altersverteilung**: Mittelwert {mean_age:.1f} Jahre
+3. **Response-Rate gesamt**: {response_rate_total:.1f}%
+4. **BMI-Blutdruck-Korrelation**: r = {bmi_bp_corr:.2f}
 :::
+""")
+```
 
 ## Methoden
 
