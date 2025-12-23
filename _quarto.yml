@@ -6,6 +6,8 @@ project:
     - "reports/*.qmd"
     - "notebooks/*.ipynb"
     - "!_*.qmd"
+  resources:
+    - "downloads/*"
 
 website:
   title: "PRECISION Reports"

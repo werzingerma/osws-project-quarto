@@ -1,23 +1,58 @@
 ---
 title: "Berichte"
 subtitle: "Alle PRECISION-Analysen und Reports"
-listing:
-  contents:
-    - "../notebooks/*.ipynb"
-  type: table
-  fields: [title, author, date, description]
-  sort: "date desc"
-  table-striped: true
-  table-hover: true
 ---
 
 ## Übersicht
 
-Hier findest du alle aktuellen Berichte des PRECISION-Projekts. Die Berichte werden automatisch aus Jupyter Notebooks generiert.
+Hier findest du alle aktuellen Berichte des PRECISION-Projekts. Die Berichte werden **lokal** aus Jupyter Notebooks generiert und dann auf GitHub Pages veröffentlicht.
 
 ::: {.callout-tip}
-## Workflow
-1. Notebook in `notebooks/` fertigstellen und ausführen
-2. Änderungen committen und pushen
-3. GitHub Actions rendert automatisch alle Notebooks zu HTML, PDF und LaTeX
+## Lokaler Workflow
+1. Notebook in `notebooks/` fertigstellen und **ausführen**
+2. Report lokal rendern (siehe Befehle unten)
+3. Änderungen committen und pushen
+4. GitHub Actions deployed automatisch die Website
+:::
+
+## Berichte
+
+| Bericht | Beschreibung | Downloads |
+|---------|--------------|-----------|
+| [Beispiel-Analyse](../notebooks/beispiel_analyse.html) | Vollständiges Beispiel-Notebook mit Exploration, statistischen Tests und publikationsreifen Grafiken | [PDF](../downloads/beispiel_analyse.pdf){.btn .btn-primary .btn-sm} [LaTeX](../downloads/beispiel_analyse.tex){.btn .btn-secondary .btn-sm} |
+
+: {.striped .hover}
+
+::: {.callout-note}
+## Download-Dateien
+Die PDF- und LaTeX-Dateien werden **lokal** generiert und müssen vor dem Push erstellt werden. Siehe Befehle unten.
+:::
+
+## Lokale Render-Befehle
+
+### Alle Formate auf einmal generieren
+
+```bash
+# HTML rendern (für die Website)
+quarto render notebooks/beispiel_analyse.ipynb --to html
+
+# PDF rendern (LaTeX wird automatisch mit erstellt wegen keep-tex: true im Header)
+quarto render notebooks/beispiel_analyse.ipynb --to pdf --output-dir downloads/
+```
+
+### Journal-Profile verwenden
+
+```bash
+# Springer-Format
+quarto render notebooks/beispiel_analyse.ipynb --to pdf --profile springer --output-dir downloads/
+
+# Elsevier-Format
+quarto render notebooks/beispiel_analyse.ipynb --to pdf --profile elsevier --output-dir downloads/
+```
+
+::: {.callout-warning}
+## Wichtig
+- Notebooks müssen vor dem Rendern **vollständig ausgeführt** sein
+- Der `downloads/` Ordner muss existieren
+- LaTeX-Dateien (.tex) werden automatisch erstellt (im Notebook-Header konfiguriert)
 :::

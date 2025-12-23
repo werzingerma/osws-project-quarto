@@ -28,61 +28,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install Python Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
           version: '1.4.553'
 
-      - name: Install TinyTeX for PDF rendering
+      - name: Render Quarto Project (nur HTML)
         run: |
-          quarto install tinytex
-
-      - name: Render Quarto Project (HTML + Notebooks)
-        run: |
-          quarto render
-
-      - name: Render PDF versions for reports
-        run: |
-          mkdir -p _site/downloads
-          for file in notebooks/*.ipynb; do
-            if [ -f "$file" ]; then
-              filename=$(basename "$file" .ipynb)
-              echo "Rendering PDF for $filename..."
-              quarto render "$file" --to pdf -o "${filename}.pdf" --output-dir _site/downloads/ || echo "PDF render failed for $file"
-            fi
-          done
-
-      - name: Render LaTeX versions for reports
-        run: |
-          for file in notebooks/*.ipynb; do
-            if [ -f "$file" ]; then
-              filename=$(basename "$file" .ipynb)
-              echo "Rendering LaTeX for $filename..."
-              quarto render "$file" --to pdf --keep-tex -o "${filename}.pdf" --output-dir _site/downloads/ || echo "LaTeX render failed for $file"
-              # Move .tex file if it exists
-              if [ -f "_site/downloads/${filename}.tex" ]; then
-                echo "LaTeX file created: ${filename}.tex"
-              elif [ -f "notebooks/${filename}.tex" ]; then
-                mv "notebooks/${filename}.tex" "_site/downloads/${filename}.tex"
-              fi
-            fi
-          done
-
-      - name: List generated downloads
-        run: |
-          echo "Generated download files:"
-          ls -la _site/downloads/ || echo "No downloads directory"
+          quarto render --no-execute
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
