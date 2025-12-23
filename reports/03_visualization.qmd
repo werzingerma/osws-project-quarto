@@ -1,0 +1,21 @@
+---
+title: "Visualisierungen"
+subtitle: "Publikationsreife Grafiken für PRECISION"
+author: "PRECISION Team"
+date: 2024-12-23
+description: "Demografische Übersicht, klinische Parameter und Response-Analyse"
+categories: [Visualisierung, Publikation]
+format:
+  html:
+    code-fold: true
+    code-summary: "Code anzeigen"
+execute:
+  warning: false
+  message: false
+---
+
+::: {.download-buttons}
+**Download:** [PDF](../downloads/03_visualization.pdf){.btn .btn-primary} [LaTeX](../downloads/03_visualization.tex){.btn .btn-secondary}
+:::
+
+{{< embed ../notebooks/03_visualization.ipynb >}}

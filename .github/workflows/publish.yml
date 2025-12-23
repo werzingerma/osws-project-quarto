@@ -63,13 +63,19 @@ jobs:
             fi
           done
 
-      - name: Render DOCX versions for reports
+      - name: Render LaTeX versions for reports
         run: |
           for file in reports/*.qmd; do
             if [ -f "$file" ] && [ "$(basename $file)" != "index.qmd" ]; then
               filename=$(basename "$file" .qmd)
-              echo "Rendering DOCX for $filename..."
-              quarto render "$file" --to docx -o "${filename}.docx" --output-dir _site/downloads/ || echo "DOCX render failed for $file"
+              echo "Rendering LaTeX for $filename..."
+              quarto render "$file" --to pdf --keep-tex -o "${filename}.pdf" --output-dir _site/downloads/ || echo "LaTeX render failed for $file"
+              # Move .tex file if it exists
+              if [ -f "_site/downloads/${filename}.tex" ]; then
+                echo "LaTeX file created: ${filename}.tex"
+              elif [ -f "reports/${filename}.tex" ]; then
+                mv "reports/${filename}.tex" "_site/downloads/${filename}.tex"
+              fi
             fi
           done
 

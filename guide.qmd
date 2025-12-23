@@ -242,17 +242,17 @@ Erstellt ein PDF mit:
 - Zeilennummern (für Review)
 - Elsevier Harvard-Zitierstil
 
-#### Word für Co-Autoren
+#### LaTeX für Weiterbearbeitung
 
 ```bash
-quarto render reports/mein-bericht.qmd --profile docx-review
+quarto render reports/mein-bericht.qmd --to pdf --keep-tex
 ```
 
-Erstellt ein DOCX mit:
+Erstellt PDF und behält die `.tex`-Datei:
 
-- Inhaltsverzeichnis
-- Nummerierte Abschnitte
-- APA-Zitierstil
+- Volle Kontrolle über LaTeX-Code
+- Weiterbearbeitung in Overleaf möglich
+- Integration in bestehende LaTeX-Projekte
 
 ---
 
