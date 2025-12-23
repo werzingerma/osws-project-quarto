@@ -3,8 +3,7 @@ title: "Berichte"
 subtitle: "Alle PRECISION-Analysen und Reports"
 listing:
   contents:
-    - "*.qmd"
-    - "!index.qmd"
+    - "../notebooks/*.ipynb"
   type: table
   fields: [title, author, date, description]
   sort: "date desc"
@@ -19,7 +18,6 @@ Hier findest du alle aktuellen Berichte des PRECISION-Projekts. Die Berichte wer
 ::: {.callout-tip}
 ## Workflow
 1. Notebook in `notebooks/` fertigstellen und ausführen
-2. `quarto render notebooks/dein-notebook.ipynb --to html --output-dir reports/`
-3. Änderungen committen und pushen
-4. GitHub Actions veröffentlicht automatisch
+2. Änderungen committen und pushen
+3. GitHub Actions rendert automatisch alle Notebooks zu HTML, PDF und LaTeX
 :::

@@ -48,16 +48,16 @@ jobs:
         run: |
           quarto install tinytex
 
-      - name: Render Quarto Project (HTML)
+      - name: Render Quarto Project (HTML + Notebooks)
         run: |
           quarto render
 
       - name: Render PDF versions for reports
         run: |
           mkdir -p _site/downloads
-          for file in reports/*.qmd; do
-            if [ -f "$file" ] && [ "$(basename $file)" != "index.qmd" ]; then
-              filename=$(basename "$file" .qmd)
+          for file in notebooks/*.ipynb; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file" .ipynb)
               echo "Rendering PDF for $filename..."
               quarto render "$file" --to pdf -o "${filename}.pdf" --output-dir _site/downloads/ || echo "PDF render failed for $file"
             fi
@@ -65,16 +65,16 @@ jobs:
 
       - name: Render LaTeX versions for reports
         run: |
-          for file in reports/*.qmd; do
-            if [ -f "$file" ] && [ "$(basename $file)" != "index.qmd" ]; then
-              filename=$(basename "$file" .qmd)
+          for file in notebooks/*.ipynb; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file" .ipynb)
               echo "Rendering LaTeX for $filename..."
               quarto render "$file" --to pdf --keep-tex -o "${filename}.pdf" --output-dir _site/downloads/ || echo "LaTeX render failed for $file"
               # Move .tex file if it exists
               if [ -f "_site/downloads/${filename}.tex" ]; then
                 echo "LaTeX file created: ${filename}.tex"
-              elif [ -f "reports/${filename}.tex" ]; then
-                mv "reports/${filename}.tex" "_site/downloads/${filename}.tex"
+              elif [ -f "notebooks/${filename}.tex" ]; then
+                mv "notebooks/${filename}.tex" "_site/downloads/${filename}.tex"
               fi
             fi
           done

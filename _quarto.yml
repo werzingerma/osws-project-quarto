@@ -4,6 +4,7 @@ project:
   render:
     - "*.qmd"
     - "reports/*.qmd"
+    - "notebooks/*.ipynb"
     - "!_*.qmd"
 
 website:
@@ -59,7 +60,7 @@ execute:
 
 # Bibliographie-Einstellungen
 bibliography: references.bib
-csl: assets/apa.csl
+csl: assets/csl/apa-7th-edition.csl
 cite-method: citeproc
 
 # Globale Optionen für Jupyter
