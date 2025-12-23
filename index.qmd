@@ -7,32 +7,40 @@ subtitle: "Open-Source Workflow für wissenschaftliche Berichte"
 
 Dies ist die zentrale Anlaufstelle für alle Berichte und Dokumentationen des **PRECISION-Projekts**.
 
-Der gesamte Workflow basiert auf Open-Source-Tools:
-
-::: {.callout-note}
-## Open Source Stack
-- **Quarto** - Dokumentenerstellung
-- **Python/Jupyter** - Datenanalyse
-- **GitHub Actions** - Automatisierung
-- **GitHub Pages** - Hosting
-:::
-
 ## Schnellzugriff
 
 ::: {.grid}
 
 ::: {.g-col-6}
 ### Berichte
-Aktuelle Analysen und Reports
+Alle aktuellen Analysen und Reports
 
 [Zu den Berichten](reports/index.qmd){.btn .btn-primary}
 :::
 
 ::: {.g-col-6}
 ### Anleitung
-Schritt-für-Schritt Guide
+Setup und Nutzung des Workflows
 
 [Zur Anleitung](guide.qmd){.btn .btn-secondary}
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-6}
+### Workflow
+Übersicht des automatisierten Prozesses
+
+[Zum Workflow](workflow.qmd){.btn .btn-secondary}
+:::
+
+::: {.g-col-6}
+### GitHub
+Quellcode und Versionierung
+
+[Zum Repository](https://github.com/werzingerma/osws-project-quarto){.btn .btn-secondary}
 :::
 
 :::
@@ -41,22 +49,6 @@ Schritt-für-Schritt Guide
 
 | Datum | Beschreibung |
 |-------|--------------|
+| 2024-12-23 | Website-Design aktualisiert |
 | 2024-12-22 | Initiales Setup des Workflows |
 | 2024-12-22 | Beispiel-Notebooks erstellt |
-| 2024-12-22 | PRECISION-Template konfiguriert |
-
-## Projektstruktur
-
-```
-osws-project-quarto/
-├── notebooks/          # Jupyter Notebooks für Analysen
-├── reports/            # Quarto-Berichte (.qmd)
-├── data/               # Daten (nicht im Repo für sensible Daten!)
-├── assets/             # Bilder, CSS, Templates
-├── _quarto.yml         # Quarto-Konfiguration
-└── .github/workflows/  # GitHub Actions
-```
-
-## Kontakt
-
-Bei Fragen zum Workflow wenden Sie sich an das PRECISION-Team.

@@ -3,18 +3,23 @@ title: "Berichte"
 subtitle: "Alle PRECISION-Analysen und Reports"
 listing:
   contents:
-    - "beispiel-analyse.qmd"
-    - "patient-statistics.qmd"
-  type: grid
+    - "*.qmd"
+    - "!index.qmd"
+  type: table
   fields: [title, author, date, description]
   sort: "date desc"
+  table-striped: true
+  table-hover: true
 ---
 
 ## Übersicht
 
-Hier findest du alle aktuellen Berichte des PRECISION-Projekts.
+Hier findest du alle aktuellen Berichte des PRECISION-Projekts. Die Berichte werden automatisch aus Jupyter Notebooks generiert.
 
 ::: {.callout-tip}
-## Automatische Updates
-Diese Seite wird automatisch aktualisiert, wenn neue Berichte hinzugefügt werden.
+## Workflow
+1. Notebook in `notebooks/` fertigstellen und ausführen
+2. `quarto render notebooks/dein-notebook.ipynb --to html --output-dir reports/`
+3. Änderungen committen und pushen
+4. GitHub Actions veröffentlicht automatisch
 :::

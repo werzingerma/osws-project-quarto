@@ -1,14 +1,14 @@
 /*-- scss:defaults --*/
 
-// PRECISION Farbpalette
-$precision-primary: #1a365d;      // Dunkelblau - Hauptfarbe
-$precision-secondary: #2c5282;    // Mittelblau
-$precision-accent: #3182ce;       // Hellblau - Akzente
-$precision-success: #38a169;      // Grün - Erfolg/Positiv
-$precision-warning: #d69e2e;      // Orange - Warnung
-$precision-danger: #e53e3e;       // Rot - Fehler/Kritisch
-$precision-light: #f7fafc;        // Hellgrau - Hintergrund
-$precision-dark: #1a202c;         // Fast Schwarz - Text
+// PRECISION Farbpalette - Klinikum Nürnberg inspiriert
+$precision-primary: #005a8c;      // Klinikum Blau - Hauptfarbe
+$precision-secondary: #007cb0;    // Helleres Blau
+$precision-accent: #00a0d2;       // Akzentblau
+$precision-success: #4a9b5e;      // Medizinisches Grün
+$precision-warning: #e8a027;      // Warnorange
+$precision-danger: #c9302c;       // Rot - Fehler/Kritisch
+$precision-light: #f5f7f9;        // Sehr helles Grau - Hintergrund
+$precision-dark: #2d3436;         // Dunkelgrau - Text
 
 // Bootstrap-Variablen überschreiben
 $primary: $precision-primary;

@@ -14,32 +14,21 @@ website:
   repo-actions: [edit, issue]
 
   navbar:
-    background: "#1a365d"
+    background: "#005a8c"
     foreground: "#ffffff"
     logo: assets/images/precision-logo.png
     left:
       - href: index.qmd
         text: Home
-      - href: guide.qmd
-        text: Anleitung
       - href: reports/index.qmd
         text: Berichte
-      - href: notebooks.qmd
-        text: Notebooks
+      - href: guide.qmd
+        text: Anleitung
+      - href: workflow.qmd
+        text: Workflow
     right:
       - icon: github
         href: https://github.com/werzingerma/osws-project-quarto
-
-  sidebar:
-    - title: "Berichte"
-      style: "docked"
-      search: true
-      contents:
-        - reports/index.qmd
-        - section: "Beispielberichte"
-          contents:
-            - reports/beispiel-analyse.qmd
-            - reports/patient-statistics.qmd
 
   page-footer:
     left: "PRECISION Project - Open Source Workflow"
