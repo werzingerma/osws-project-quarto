@@ -25,34 +25,39 @@ Hier findest du alle aktuellen Berichte des PRECISION-Projekts. Die Berichte wer
 
 ::: {.callout-note}
 ## Download-Dateien
-Die PDF- und LaTeX-Dateien werden **lokal** generiert und müssen vor dem Push erstellt werden. Siehe Befehle unten.
+Die PDF- und LaTeX-Dateien werden **lokal** generiert und müssen vor dem Push erstellt werden.
 :::
 
 ## Lokale Render-Befehle
 
-### Alle Formate auf einmal generieren
+### PDF mit LaTeX generieren
 
 ```bash
-# HTML rendern (für die Website)
-quarto render notebooks/beispiel_analyse.ipynb --to html
-
-# PDF rendern (LaTeX wird automatisch mit erstellt wegen keep-tex: true im Header)
-quarto render notebooks/beispiel_analyse.ipynb --to pdf --output-dir downloads/
+# PDF + LaTeX generieren (keep-tex behält die .tex Datei)
+quarto render notebooks/beispiel_analyse.ipynb --to pdf \
+  -M keep-tex:true \
+  --output-dir downloads/
 ```
 
 ### Journal-Profile verwenden
 
 ```bash
 # Springer-Format
-quarto render notebooks/beispiel_analyse.ipynb --to pdf --profile springer --output-dir downloads/
+quarto render notebooks/beispiel_analyse.ipynb --to pdf \
+  --profile springer \
+  -M keep-tex:true \
+  --output-dir downloads/
 
 # Elsevier-Format
-quarto render notebooks/beispiel_analyse.ipynb --to pdf --profile elsevier --output-dir downloads/
+quarto render notebooks/beispiel_analyse.ipynb --to pdf \
+  --profile elsevier \
+  -M keep-tex:true \
+  --output-dir downloads/
 ```
 
 ::: {.callout-warning}
 ## Wichtig
 - Notebooks müssen vor dem Rendern **vollständig ausgeführt** sein
+- TinyTeX muss lokal installiert sein: `quarto install tinytex`
 - Der `downloads/` Ordner muss existieren
-- LaTeX-Dateien (.tex) werden automatisch erstellt (im Notebook-Header konfiguriert)
 :::
