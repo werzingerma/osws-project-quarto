@@ -190,9 +190,9 @@ git push origin main
 Nach dem Push läuft automatisch:
 
 1. **GitHub Action** wird gestartet
-2. **Quarto rendert** alle Dokumente
+2. **Quarto rendert** alle Dokumente (HTML, PDF, DOCX)
 3. **GitHub Pages** wird aktualisiert
-4. **Bericht ist online** verfügbar (nach ca. 2-5 Minuten)
+4. **Bericht ist online** mit Download-Buttons für PDF/DOCX
 
 ---
 
@@ -210,9 +210,103 @@ git add . && git commit -m "Add: Mein neuer Report" && git push
 
 Fertig! Nach wenigen Minuten ist der Bericht online.
 
+
+## Publikation & Journal-Export
+
+### 6. Journal-Formate erstellen
+
+Für wissenschaftliche Publikationen stehen vordefinierte Profile zur Verfügung:
+
+#### Springer-Format
+
+```bash
+quarto render reports/mein-bericht.qmd --profile springer
+```
+
+Erstellt ein PDF mit:
+
+- Springer-konformer Formatierung
+- 1.5-facher Zeilenabstand
+- Nummerierte Abschnitte
+- Springer-Zitierstil
+
+#### Elsevier-Format
+
+```bash
+quarto render reports/mein-bericht.qmd --profile elsevier
+```
+
+Erstellt ein PDF mit:
+
+- Doppelter Zeilenabstand
+- Zeilennummern (für Review)
+- Elsevier Harvard-Zitierstil
+
+#### Word für Co-Autoren
+
+```bash
+quarto render reports/mein-bericht.qmd --profile docx-review
+```
+
+Erstellt ein DOCX mit:
+
+- Inhaltsverzeichnis
+- Nummerierte Abschnitte
+- APA-Zitierstil
+
+---
+
+### 7. Literaturverwaltung
+
+#### Zitationen im Text
+
+```markdown
+Wie bereits gezeigt wurde [@smith2023], ist dies relevant.
+
+Mehrere Quellen [@smith2023; @jones2024].
+
+@smith2023 zeigt, dass...
+```
+
+#### Bibliographie
+
+Alle Quellen werden in `references.bib` gepflegt:
+
+```bibtex
+@article{smith2023,
+  title = {Wichtige Studie},
+  author = {Smith, John},
+  journal = {Journal of Research},
+  year = {2023}
+}
+```
+
+::: {.callout-tip}
+#### Tipp: Zotero-Integration
+Nutze [Zotero](https://www.zotero.org/) mit dem Better BibTeX-Plugin für automatische Synchronisation der Bibliographie.
+:::
+
+---
+
+### 8. Verfügbare Zitierstile
+
+| Stil | Datei | Verwendung |
+|------|-------|------------|
+| APA 7th | `apa-7th-edition.csl` | Psychologie, Sozialwissenschaften |
+| Vancouver | `vancouver.csl` | Medizin, Biomedizin |
+| Springer | `springer-basic-author-date.csl` | Springer-Journals |
+| Elsevier Harvard | `elsevier-harvard.csl` | Elsevier-Journals |
+
+Zitierstil ändern in der `.qmd`-Datei:
+
+```yaml
+csl: assets/csl/vancouver.csl
+```
+
 :::
 
 ## Hilfe & Support
 
 - **Quarto Dokumentation**: [quarto.org/docs](https://quarto.org/docs/)
 - **GitHub Actions**: [docs.github.com/actions](https://docs.github.com/en/actions)
+- **Quarto Journal Extensions**: [quarto.org/docs/journals](https://quarto.org/docs/journals/)

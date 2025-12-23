@@ -1,0 +1,42 @@
+# Elsevier Journal Profile
+# Verwendung: quarto render datei.qmd --profile elsevier
+
+format:
+  pdf:
+    documentclass: article
+    papersize: a4
+    fontsize: 12pt
+    geometry:
+      - margin=2.5cm
+    number-sections: true
+    toc: false
+    colorlinks: true
+    linkcolor: "000000"
+    citecolor: "000000"
+    urlcolor: "005a8c"
+    fig-pos: "htbp"
+    fig-width: 6.5
+    fig-height: 4.5
+    keep-tex: false
+    include-in-header:
+      - text: |
+          \usepackage{booktabs}
+          \usepackage{longtable}
+          \usepackage{array}
+          \usepackage{lineno}
+          \linenumbers
+          \usepackage{setspace}
+          \doublespacing
+
+csl: assets/csl/elsevier-harvard.csl
+bibliography: references.bib
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+# Elsevier-spezifische Einstellungen
+metadata:
+  journal: "Journal Name"
+  linenumbers: true

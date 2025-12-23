@@ -13,6 +13,10 @@ execute:
   message: false
 ---
 
+::: {.download-buttons}
+**Download:** [PDF](../downloads/beispiel-analyse.pdf){.btn .btn-primary} [DOCX](../downloads/beispiel-analyse.docx){.btn .btn-secondary}
+:::
+
 ## Einleitung
 
 Dieser Bericht demonstriert den Open-Source-Workflow für wissenschaftliche Analysen im PRECISION-Projekt. Die hier verwendeten Daten sind **synthetisch** und dienen ausschließlich Demonstrationszwecken.

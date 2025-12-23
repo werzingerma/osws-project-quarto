@@ -1,0 +1,42 @@
+# Springer Nature Journal Profile
+# Verwendung: quarto render datei.qmd --profile springer
+
+format:
+  pdf:
+    documentclass: article
+    papersize: a4
+    fontsize: 11pt
+    geometry:
+      - margin=2.5cm
+    number-sections: true
+    toc: false
+    colorlinks: true
+    linkcolor: "005a8c"
+    citecolor: "005a8c"
+    urlcolor: "005a8c"
+    fig-pos: "htbp"
+    fig-width: 6
+    fig-height: 4
+    keep-tex: false
+    include-in-header:
+      - text: |
+          \usepackage{booktabs}
+          \usepackage{longtable}
+          \usepackage{array}
+          \usepackage{multirow}
+          \usepackage{float}
+          \usepackage{setspace}
+          \onehalfspacing
+
+csl: assets/csl/springer-basic-author-date.csl
+bibliography: references.bib
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+# Springer-spezifische Metadaten
+metadata:
+  journal: "Journal Name"
+  wordcount: true

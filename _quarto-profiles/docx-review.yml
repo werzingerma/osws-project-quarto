@@ -1,0 +1,20 @@
+# Word Document Profile für Co-Autoren Review
+# Verwendung: quarto render datei.qmd --profile docx-review
+
+format:
+  docx:
+    reference-doc: templates/precision-reference.docx
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    highlight-style: github
+    fig-width: 6
+    fig-height: 4
+
+csl: assets/csl/apa-7th-edition.csl
+bibliography: references.bib
+
+execute:
+  echo: false
+  warning: false
+  message: false

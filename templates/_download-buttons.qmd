@@ -1,0 +1,3 @@
+::: {.download-buttons}
+**Download:** [PDF](../downloads/{{< meta filename >}}.pdf){.btn .btn-primary .btn-sm} [DOCX](../downloads/{{< meta filename >}}.docx){.btn .btn-secondary .btn-sm}
+:::

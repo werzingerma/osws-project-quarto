@@ -44,9 +44,39 @@ jobs:
         with:
           version: '1.4.553'
 
-      - name: Render Quarto Project
+      - name: Install TinyTeX for PDF rendering
+        run: |
+          quarto install tinytex
+
+      - name: Render Quarto Project (HTML)
         run: |
           quarto render
+
+      - name: Render PDF versions for reports
+        run: |
+          mkdir -p _site/downloads
+          for file in reports/*.qmd; do
+            if [ -f "$file" ] && [ "$(basename $file)" != "index.qmd" ]; then
+              filename=$(basename "$file" .qmd)
+              echo "Rendering PDF for $filename..."
+              quarto render "$file" --to pdf -o "${filename}.pdf" --output-dir _site/downloads/ || echo "PDF render failed for $file"
+            fi
+          done
+
+      - name: Render DOCX versions for reports
+        run: |
+          for file in reports/*.qmd; do
+            if [ -f "$file" ] && [ "$(basename $file)" != "index.qmd" ]; then
+              filename=$(basename "$file" .qmd)
+              echo "Rendering DOCX for $filename..."
+              quarto render "$file" --to docx -o "${filename}.docx" --output-dir _site/downloads/ || echo "DOCX render failed for $file"
+            fi
+          done
+
+      - name: List generated downloads
+        run: |
+          echo "Generated download files:"
+          ls -la _site/downloads/ || echo "No downloads directory"
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
