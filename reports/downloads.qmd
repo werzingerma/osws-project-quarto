@@ -1,0 +1,60 @@
+---
+title: "Downloads"
+subtitle: "PDF und LaTeX Export"
+---
+
+## Verfügbare Downloads
+
+Hier findest du alle Berichte als PDF und LaTeX zum Download.
+
+| Bericht | PDF | LaTeX |
+|---------|-----|-------|
+| Beispiel-Analyse | [PDF](../downloads/beispiel_analyse.pdf) | [LaTeX](../downloads/beispiel_analyse.tex) |
+
+: {.striped .hover}
+
+::: {.callout-warning}
+## Hinweis
+Diese Liste muss manuell gepflegt werden. Nach dem Erstellen eines neuen Berichts hier einen Eintrag hinzufügen.
+:::
+
+---
+
+## Lokale Render-Befehle
+
+### PDF mit LaTeX generieren
+
+```bash
+# PDF + LaTeX generieren
+quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
+  -M keep-tex:true \
+  -o NOTEBOOK_NAME.pdf \
+  --output-dir downloads/
+
+# Aufräumen
+rm -rf notebooks/NOTEBOOK_NAME.tex notebooks/NOTEBOOK_NAME_files
+```
+
+### Journal-Profile verwenden
+
+```bash
+# Springer-Format
+quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
+  --profile springer \
+  -M keep-tex:true \
+  -o NOTEBOOK_NAME.pdf \
+  --output-dir downloads/
+
+# Elsevier-Format
+quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
+  --profile elsevier \
+  -M keep-tex:true \
+  -o NOTEBOOK_NAME.pdf \
+  --output-dir downloads/
+```
+
+::: {.callout-tip}
+## Voraussetzungen
+- Notebook muss **vollständig ausgeführt** sein
+- TinyTeX installieren: `quarto install tinytex`
+:::

@@ -25,6 +25,8 @@ website:
         text: Home
       - href: reports/index.qmd
         text: Berichte
+      - href: reports/downloads.qmd
+        text: Downloads
       - href: guide.qmd
         text: Anleitung
       - href: workflow.qmd
