@@ -1,130 +1,42 @@
 ---
 title: "Downloads"
-subtitle: "PDF, LaTeX und DOCX Export"
+subtitle: "PDF, LaTeX und Word Export"
 ---
 
-```{python}
-#| echo: false
-#| output: asis
+## Verfügbare Downloads
 
-from pathlib import Path
-
-# Downloads-Ordner finden (verschiedene mögliche Pfade probieren)
-possible_paths = [
-    Path("downloads"),
-    Path("../downloads"),
-    Path.cwd() / "downloads",
-    Path.cwd().parent / "downloads",
-]
-
-downloads_dir = None
-for p in possible_paths:
-    if p.exists() and p.is_dir():
-        downloads_dir = p
-        break
-
-if downloads_dir:
-    # Alle Dateien sammeln
-    pdfs = sorted(downloads_dir.glob("*.pdf"))
-    texs = sorted(downloads_dir.glob("*.tex"))
-    docxs = sorted(downloads_dir.glob("*.docx"))
-
-    if pdfs or texs or docxs:
-        print("## Verfügbare Downloads\n")
-        print("| Bericht | PDF | LaTeX | Word |")
-        print("|---------|-----|-------|------|")
-
-        # Alle PDFs durchgehen und passende TEX/DOCX suchen
-        seen = set()
-        for pdf in pdfs:
-            name = pdf.stem
-            seen.add(name)
-            tex_exists = (downloads_dir / f"{name}.tex").exists()
-            docx_exists = (downloads_dir / f"{name}.docx").exists()
-
-            pdf_link = f"[PDF](/downloads/{name}.pdf)"
-            tex_link = f"[LaTeX](/downloads/{name}.tex)" if tex_exists else "-"
-            docx_link = f"[Word](/downloads/{name}.docx)" if docx_exists else "-"
-
-            print(f"| {name} | {pdf_link} | {tex_link} | {docx_link} |")
-
-        # TEX-Dateien ohne PDF
-        for tex in texs:
-            name = tex.stem
-            if name not in seen:
-                seen.add(name)
-                docx_exists = (downloads_dir / f"{name}.docx").exists()
-                docx_link = f"[Word](/downloads/{name}.docx)" if docx_exists else "-"
-                print(f"| {name} | - | [LaTeX](/downloads/{name}.tex) | {docx_link} |")
-
-        # DOCX-Dateien ohne PDF/TEX
-        for docx in docxs:
-            name = docx.stem
-            if name not in seen:
-                print(f"| {name} | - | - | [Word](/downloads/{name}.docx) |")
-    else:
-        print("::: {.callout-info}")
-        print("Keine Download-Dateien gefunden.")
-        print(":::")
-else:
-    print("::: {.callout-warning}")
-    print("Downloads-Ordner nicht gefunden.")
-    print(":::")
-```
-
----
-
-## Lokale Render-Befehle
-
-### Alle Formate generieren
-
-```bash
-# PDF + LaTeX generieren
-quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
-  -M keep-tex:true \
-  -o NOTEBOOK_NAME.pdf \
-  --output-dir downloads/
-
-# LaTeX-Datei verschieben
-mv notebooks/NOTEBOOK_NAME.tex downloads/
-
-# DOCX (Word) generieren
-quarto render notebooks/NOTEBOOK_NAME.ipynb --to docx \
-  -o NOTEBOOK_NAME.docx \
-  --output-dir downloads/
-
-# Aufräumen
-rm -rf notebooks/NOTEBOOK_NAME_files
-rm -rf downloads/_site downloads/index.html downloads/robots.txt downloads/sitemap.xml downloads/notebooks
-```
-
-### Journal-Profile verwenden
-
-```bash
-# Springer-Format (PDF)
-quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
-  --profile springer -M keep-tex:true \
-  -o NOTEBOOK_NAME.pdf --output-dir downloads/
-
-# Elsevier-Format (PDF)
-quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
-  --profile elsevier -M keep-tex:true \
-  -o NOTEBOOK_NAME.pdf --output-dir downloads/
-
-# Nature-Format (PDF)
-quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
-  --profile nature -M keep-tex:true \
-  -o NOTEBOOK_NAME.pdf --output-dir downloads/
-
-# Lancet-Format (PDF)
-quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
-  --profile lancet -M keep-tex:true \
-  -o NOTEBOOK_NAME.pdf --output-dir downloads/
-```
+Alle Berichte werden automatisch in verschiedenen Formaten generiert.
 
 ::: {.callout-tip}
-## Voraussetzungen
-- Notebook muss **vollständig ausgeführt** sein
-- TinyTeX installieren: `quarto install tinytex`
-- Pandoc ist in Quarto enthalten (für DOCX)
+## Automatische Generierung
+PDF, LaTeX und Word-Dateien werden bei jedem Push automatisch von GitHub Actions erstellt.
+:::
+
+{{< include ../_downloads-list.md >}}
+
+---
+
+## Workflow
+
+Der Workflow ist jetzt ganz einfach:
+
+```bash
+# 1. Notebook erstellen und ausführen (in Jupyter)
+
+# 2. Pushen - fertig!
+git add .
+git commit -m "Add: Neuer Bericht"
+git push
+```
+
+GitHub Actions generiert automatisch:
+
+- HTML (Website)
+- PDF (mit TinyTeX)
+- LaTeX (.tex)
+- Word (.docx)
+
+::: {.callout-note}
+## Build-Zeit
+Das Generieren aller Formate dauert ca. 3-5 Minuten.
 :::

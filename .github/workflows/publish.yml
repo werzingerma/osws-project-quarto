@@ -1,21 +1,16 @@
 name: Publish Quarto Site
 
 on:
-  # Trigger bei Push auf main
   push:
     branches:
       - main
-
-  # Manueller Trigger
   workflow_dispatch:
 
-# Berechtigungen für GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Nur ein Deployment gleichzeitig
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -43,10 +38,91 @@ jobs:
         with:
           version: '1.4.553'
 
-      - name: Render Quarto Project
+      - name: Install TinyTeX
         run: |
-          # Downloads-Seite mit Python ausführen, Rest ohne
-          quarto render reports/downloads.qmd
+          quarto install tinytex
+
+      - name: Create Downloads Directory
+        run: |
+          mkdir -p _site/downloads
+
+      - name: Generate PDF, LaTeX, DOCX for all notebooks
+        run: |
+          for notebook in notebooks/*.ipynb; do
+            if [ -f "$notebook" ]; then
+              filename=$(basename "$notebook" .ipynb)
+              echo "Processing: $filename"
+
+              # PDF mit LaTeX
+              quarto render "$notebook" --no-execute --to pdf \
+                -M keep-tex:true \
+                -o "${filename}.pdf" \
+                --output-dir _site/downloads/ || echo "PDF failed for $filename"
+
+              # LaTeX verschieben (wird im notebooks/ erstellt)
+              if [ -f "notebooks/${filename}.tex" ]; then
+                mv "notebooks/${filename}.tex" "_site/downloads/${filename}.tex"
+              fi
+
+              # DOCX
+              quarto render "$notebook" --no-execute --to docx \
+                -o "${filename}.docx" \
+                --output-dir _site/downloads/ || echo "DOCX failed for $filename"
+
+              # Aufräumen
+              rm -rf "notebooks/${filename}_files"
+            fi
+          done
+
+      - name: Generate Downloads List
+        run: |
+          cat > _downloads-list.md << 'EOF'
+          | Bericht | PDF | LaTeX | Word |
+          |---------|-----|-------|------|
+          EOF
+
+          for notebook in notebooks/*.ipynb; do
+            if [ -f "$notebook" ]; then
+              filename=$(basename "$notebook" .ipynb)
+
+              # Titel aus Notebook extrahieren (falls vorhanden)
+              title=$(python3 -c "
+          import json
+          with open('$notebook') as f:
+              nb = json.load(f)
+          for cell in nb.get('cells', []):
+              if cell.get('cell_type') == 'raw':
+                  source = cell.get('source', [])
+                  if isinstance(source, list):
+                      source = ''.join(source)
+                  if 'title:' in source:
+                      for line in source.split('\n'):
+                          if line.strip().startswith('title:'):
+                              title = line.split(':', 1)[1].strip().strip('\"')
+                              print(title)
+                              break
+                      break
+          " 2>/dev/null || echo "$filename")
+
+              # Falls kein Titel gefunden, Dateiname verwenden
+              if [ -z "$title" ]; then
+                title="$filename"
+              fi
+
+              echo "| $title | [PDF](/downloads/${filename}.pdf) | [LaTeX](/downloads/${filename}.tex) | [Word](/downloads/${filename}.docx) |" >> _downloads-list.md
+            fi
+          done
+
+      - name: List generated downloads
+        run: |
+          echo "=== Generated Downloads ==="
+          ls -la _site/downloads/ || echo "No downloads"
+          echo ""
+          echo "=== Downloads List ==="
+          cat _downloads-list.md
+
+      - name: Render HTML (Website)
+        run: |
           quarto render --no-execute
 
       - name: Upload Pages Artifact
