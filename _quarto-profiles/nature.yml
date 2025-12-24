@@ -1,0 +1,44 @@
+# Nature Journal Profile
+# Verwendung: quarto render datei.qmd --profile nature
+
+format:
+  pdf:
+    documentclass: article
+    papersize: a4
+    fontsize: 11pt
+    geometry:
+      - margin=2.5cm
+    number-sections: false
+    toc: false
+    colorlinks: true
+    linkcolor: "000000"
+    citecolor: "000000"
+    urlcolor: "0000FF"
+    fig-pos: "htbp"
+    fig-width: 7
+    fig-height: 5
+    keep-tex: false
+    include-in-header:
+      - text: |
+          \usepackage{booktabs}
+          \usepackage{longtable}
+          \usepackage{array}
+          \usepackage{float}
+          \usepackage{setspace}
+          \doublespacing
+          \usepackage{helvet}
+          \renewcommand{\familydefault}{\sfdefault}
+
+csl: assets/csl/nature.csl
+bibliography: references.bib
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+# Nature-spezifische Formatierung
+# - Keine nummerierten Überschriften
+# - Double-spacing
+# - Sans-serif Schrift (Helvetica)
+# - Numerische Zitationen

@@ -281,9 +281,56 @@ Alle Quellen werden in `references.bib` gepflegt:
 }
 ```
 
+---
+
+### 7.1 Zotero-Integration
+
+[Zotero](https://www.zotero.org/) ist ein kostenloses Open-Source-Tool zur Literaturverwaltung. Mit dem **Better BibTeX**-Plugin kann die Bibliographie automatisch synchronisiert werden.
+
+#### Schritt 1: Zotero installieren
+
+1. Download von [zotero.org](https://www.zotero.org/download/)
+2. Browser-Connector installieren (Chrome/Firefox/Safari)
+
+#### Schritt 2: Better BibTeX Plugin installieren
+
+1. Download von [retorque.re/zotero-better-bibtex](https://retorque.re/zotero-better-bibtex/installation/)
+2. In Zotero: **Tools → Add-ons → Zahnrad → Install Add-on From File**
+3. `.xpi`-Datei auswählen und Zotero neustarten
+
+#### Schritt 3: Automatischen Export einrichten
+
+1. In Zotero: Rechtsklick auf Sammlung → **Export Collection**
+2. Format: **Better BibTeX**
+3. **Keep updated** aktivieren
+4. Speichern als `references.bib` im Projektverzeichnis
+
 ::: {.callout-tip}
-#### Tipp: Zotero-Integration
-Nutze [Zotero](https://www.zotero.org/) mit dem Better BibTeX-Plugin für automatische Synchronisation der Bibliographie.
+#### Automatische Synchronisation
+Mit "Keep updated" wird die `references.bib` bei jeder Änderung in Zotero automatisch aktualisiert.
+:::
+
+#### Schritt 4: Citation Keys konfigurieren
+
+In Zotero → **Preferences → Better BibTeX → Citation Keys**:
+
+Empfohlenes Format:
+```
+[auth:lower][year]
+```
+
+Beispiel: `smith2023`, `mueller2024`
+
+#### Workflow
+
+1. Paper/Quelle in Zotero speichern (Browser-Connector)
+2. `references.bib` wird automatisch aktualisiert
+3. Im Quarto-Dokument zitieren: `[@smith2023]`
+4. Quarto erstellt automatisch das Literaturverzeichnis
+
+::: {.callout-note}
+#### Zotero-Sammlungen
+Erstelle eine eigene Sammlung für das PRECISION-Projekt und exportiere nur diese Sammlung.
 :::
 
 ---
@@ -294,13 +341,31 @@ Nutze [Zotero](https://www.zotero.org/) mit dem Better BibTeX-Plugin für automa
 |------|-------|------------|
 | APA 7th | `apa-7th-edition.csl` | Psychologie, Sozialwissenschaften |
 | Vancouver | `vancouver.csl` | Medizin, Biomedizin |
-| Springer | `springer-basic-author-date.csl` | Springer-Journals |
-| Elsevier Harvard | `elsevier-harvard.csl` | Elsevier-Journals |
+| Springer | `springer-basic-author-date.csl` | Springer Nature Journals |
+| Elsevier Harvard | `elsevier-harvard.csl` | Elsevier Journals |
+| Nature | `nature.csl` | Nature, Nature Medicine, etc. |
+| The Lancet | `the-lancet.csl` | Lancet, Lancet Oncology, etc. |
 
 Zitierstil ändern in der `.qmd`-Datei:
 
 ```yaml
 csl: assets/csl/vancouver.csl
+```
+
+---
+
+### 9. Verfügbare Journal-Profile
+
+| Profil | Befehl | Formatierung |
+|--------|--------|--------------|
+| Springer | `--profile springer` | 1.5x Zeilenabstand, nummerierte Abschnitte |
+| Elsevier | `--profile elsevier` | Doppelter Zeilenabstand, Zeilennummern |
+| Nature | `--profile nature` | Sans-serif, keine Nummerierung |
+| Lancet | `--profile lancet` | Times, Zeilennummern, doppelter Abstand |
+
+Beispiel:
+```bash
+quarto render notebooks/analyse.ipynb --to pdf --profile nature
 ```
 
 :::

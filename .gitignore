@@ -13,6 +13,7 @@ _site/
 *.pdf
 !downloads/*.pdf
 *.docx
+!downloads/*.docx
 *.pptx
 
 # Quarto render cache
