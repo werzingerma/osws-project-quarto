@@ -8,39 +8,59 @@ subtitle: "PDF und LaTeX Export"
 #| output: asis
 
 from pathlib import Path
+import os
 
-# Downloads-Ordner finden
-downloads_dir = Path("../downloads")
+# Aktuelles Arbeitsverzeichnis für Debug
+cwd = Path.cwd()
 
-# Alle PDF und TEX Dateien sammeln
-pdfs = sorted(downloads_dir.glob("*.pdf"))
-texs = sorted(downloads_dir.glob("*.tex"))
+# Downloads-Ordner finden (verschiedene mögliche Pfade probieren)
+possible_paths = [
+    Path("downloads"),           # Vom Projekt-Root
+    Path("../downloads"),        # Von reports/
+    cwd / "downloads",
+    cwd.parent / "downloads",
+]
 
-if pdfs or texs:
-    print("## Verfügbare Downloads\n")
-    print("| Bericht | PDF | LaTeX |")
-    print("|---------|-----|-------|")
+downloads_dir = None
+for p in possible_paths:
+    if p.exists() and p.is_dir():
+        downloads_dir = p
+        break
 
-    # Alle PDFs durchgehen und passende TEX suchen
-    seen = set()
-    for pdf in pdfs:
-        name = pdf.stem
-        seen.add(name)
-        tex_exists = (downloads_dir / f"{name}.tex").exists()
+if downloads_dir:
+    # Alle PDF und TEX Dateien sammeln
+    pdfs = sorted(downloads_dir.glob("*.pdf"))
+    texs = sorted(downloads_dir.glob("*.tex"))
 
-        pdf_link = f"[PDF](../downloads/{name}.pdf)"
-        tex_link = f"[LaTeX](../downloads/{name}.tex)" if tex_exists else "-"
+    if pdfs or texs:
+        print("## Verfügbare Downloads\n")
+        print("| Bericht | PDF | LaTeX |")
+        print("|---------|-----|-------|")
 
-        print(f"| {name} | {pdf_link} | {tex_link} |")
+        # Alle PDFs durchgehen und passende TEX suchen
+        seen = set()
+        for pdf in pdfs:
+            name = pdf.stem
+            seen.add(name)
+            tex_exists = (downloads_dir / f"{name}.tex").exists()
 
-    # TEX-Dateien ohne PDF
-    for tex in texs:
-        name = tex.stem
-        if name not in seen:
-            print(f"| {name} | - | [LaTeX](../downloads/{name}.tex) |")
+            pdf_link = f"[PDF](/downloads/{name}.pdf)"
+            tex_link = f"[LaTeX](/downloads/{name}.tex)" if tex_exists else "-"
+
+            print(f"| {name} | {pdf_link} | {tex_link} |")
+
+        # TEX-Dateien ohne PDF
+        for tex in texs:
+            name = tex.stem
+            if name not in seen:
+                print(f"| {name} | - | [LaTeX](/downloads/{name}.tex) |")
+    else:
+        print("::: {.callout-info}")
+        print("Keine PDF/LaTeX-Dateien im Downloads-Ordner gefunden.")
+        print(":::")
 else:
-    print("::: {.callout-info}")
-    print("Noch keine Downloads vorhanden.")
+    print("::: {.callout-warning}")
+    print("Downloads-Ordner nicht gefunden.")
     print(":::")
 ```
 
