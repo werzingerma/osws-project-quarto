@@ -44,7 +44,7 @@ jobs:
 
       - name: Create Downloads Directory
         run: |
-          mkdir -p _site/downloads
+          mkdir -p downloads
 
       - name: Generate PDF, LaTeX, DOCX for all notebooks
         run: |
@@ -57,17 +57,17 @@ jobs:
               quarto render "$notebook" --no-execute --to pdf \
                 -M keep-tex:true \
                 -o "${filename}.pdf" \
-                --output-dir _site/downloads/ || echo "PDF failed for $filename"
+                --output-dir downloads/ || echo "PDF failed for $filename"
 
               # LaTeX verschieben (wird im notebooks/ erstellt)
               if [ -f "notebooks/${filename}.tex" ]; then
-                mv "notebooks/${filename}.tex" "_site/downloads/${filename}.tex"
+                mv "notebooks/${filename}.tex" "downloads/${filename}.tex"
               fi
 
               # DOCX
               quarto render "$notebook" --no-execute --to docx \
                 -o "${filename}.docx" \
-                --output-dir _site/downloads/ || echo "DOCX failed for $filename"
+                --output-dir downloads/ || echo "DOCX failed for $filename"
 
               # Aufräumen
               rm -rf "notebooks/${filename}_files"
@@ -76,54 +76,57 @@ jobs:
 
       - name: Generate Downloads List
         run: |
-          cat > _downloads-list.md << 'EOF'
+          cat > _downloads-list.md << 'ENDOFFILE'
           | Bericht | PDF | LaTeX | Word |
           |---------|-----|-------|------|
-          EOF
+          ENDOFFILE
 
           for notebook in notebooks/*.ipynb; do
             if [ -f "$notebook" ]; then
               filename=$(basename "$notebook" .ipynb)
 
-              # Titel aus Notebook extrahieren (falls vorhanden)
-              title=$(python3 -c "
+              # Titel aus Notebook extrahieren
+              title=$(python3 << PYEOF
           import json
-          with open('$notebook') as f:
-              nb = json.load(f)
-          for cell in nb.get('cells', []):
-              if cell.get('cell_type') == 'raw':
-                  source = cell.get('source', [])
-                  if isinstance(source, list):
-                      source = ''.join(source)
-                  if 'title:' in source:
+          try:
+              with open('$notebook') as f:
+                  nb = json.load(f)
+              for cell in nb.get('cells', []):
+                  if cell.get('cell_type') == 'raw':
+                      source = cell.get('source', [])
+                      if isinstance(source, list):
+                          source = ''.join(source)
                       for line in source.split('\n'):
                           if line.strip().startswith('title:'):
-                              title = line.split(':', 1)[1].strip().strip('\"')
+                              title = line.split(':', 1)[1].strip().strip('"').strip("'")
                               print(title)
-                              break
-                      break
-          " 2>/dev/null || echo "$filename")
-
-              # Falls kein Titel gefunden, Dateiname verwenden
-              if [ -z "$title" ]; then
-                title="$filename"
-              fi
+                              exit()
+              print('$filename')
+          except:
+              print('$filename')
+          PYEOF
+          )
 
               echo "| $title | [PDF](/downloads/${filename}.pdf) | [LaTeX](/downloads/${filename}.tex) | [Word](/downloads/${filename}.docx) |" >> _downloads-list.md
             fi
           done
 
+          echo "=== Downloads List ==="
+          cat _downloads-list.md
+
       - name: List generated downloads
         run: |
           echo "=== Generated Downloads ==="
-          ls -la _site/downloads/ || echo "No downloads"
-          echo ""
-          echo "=== Downloads List ==="
-          cat _downloads-list.md
+          ls -la downloads/
 
       - name: Render HTML (Website)
         run: |
           quarto render --no-execute
+
+      - name: Verify downloads in _site
+        run: |
+          echo "=== _site/downloads content ==="
+          ls -la _site/downloads/ || echo "downloads folder missing in _site"
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
