@@ -84,26 +84,25 @@ jobs:
             if [ -f "$notebook" ]; then
               filename=$(basename "$notebook" .ipynb)
 
-              # Titel aus Notebook extrahieren
+              # Titel aus Notebook extrahieren (nur erste Zeile)
               title=$(python3 -c "
-          import json
-          try:
-              with open('$notebook') as f:
-                  nb = json.load(f)
-              for cell in nb.get('cells', []):
-                  if cell.get('cell_type') == 'raw':
-                      source = cell.get('source', [])
-                      if isinstance(source, list):
-                          source = ''.join(source)
-                      for line in source.split('\n'):
-                          if line.strip().startswith('title:'):
-                              title = line.split(':', 1)[1].strip().strip('\"').strip(\"'\")
-                              print(title)
-                              exit()
-              print('$filename')
-          except:
-              print('$filename')
-          ")
+import json, sys
+try:
+    with open('$notebook') as f:
+        nb = json.load(f)
+    for cell in nb.get('cells', []):
+        if cell.get('cell_type') == 'raw':
+            source = cell.get('source', [])
+            if isinstance(source, list):
+                source = ''.join(source)
+            for line in source.split('\n'):
+                if line.strip().startswith('title:'):
+                    print(line.split(':', 1)[1].strip().strip('\"').strip(\"'\"))
+                    sys.exit(0)
+    print('$filename')
+except:
+    print('$filename')
+" | head -1)
 
               echo "| $title | [PDF](/downloads/${filename}.pdf) | [LaTeX](/downloads/${filename}.tex) | [Word](/downloads/${filename}.docx) |" >> _downloads-list.md
             fi
