@@ -76,17 +76,16 @@ jobs:
 
       - name: Generate Downloads List
         run: |
-          cat > _downloads-list.md << 'ENDOFFILE'
-          | Bericht | PDF | LaTeX | Word |
-          |---------|-----|-------|------|
-          ENDOFFILE
+          # Erstelle die Markdown-Tabelle
+          echo "| Bericht | PDF | LaTeX | Word |" > _downloads-list.md
+          echo "|---------|-----|-------|------|" >> _downloads-list.md
 
           for notebook in notebooks/*.ipynb; do
             if [ -f "$notebook" ]; then
               filename=$(basename "$notebook" .ipynb)
 
               # Titel aus Notebook extrahieren
-              title=$(python3 << PYEOF
+              title=$(python3 -c "
           import json
           try:
               with open('$notebook') as f:
@@ -98,14 +97,13 @@ jobs:
                           source = ''.join(source)
                       for line in source.split('\n'):
                           if line.strip().startswith('title:'):
-                              title = line.split(':', 1)[1].strip().strip('"').strip("'")
+                              title = line.split(':', 1)[1].strip().strip('\"').strip(\"'\")
                               print(title)
                               exit()
               print('$filename')
           except:
               print('$filename')
-          PYEOF
-          )
+          ")
 
               echo "| $title | [PDF](/downloads/${filename}.pdf) | [LaTeX](/downloads/${filename}.tex) | [Word](/downloads/${filename}.docx) |" >> _downloads-list.md
             fi
