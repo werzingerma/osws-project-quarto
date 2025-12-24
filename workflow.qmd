@@ -7,20 +7,18 @@ subtitle: "Der automatisierte Prozess von der Analyse zur Veröffentlichung"
 
 ```{mermaid}
 flowchart LR
-    A[Jupyter Notebook<br/>erstellen & ausführen] --> B[Quarto Render<br/>lokal ausführen]
-    B --> C[Git Commit & Push]
-    C --> D[GitHub Action<br/>startet automatisch]
-    D --> E[Quarto baut<br/>Website]
-    E --> F[GitHub Pages<br/>Deployment]
-    F --> G[Report online<br/>verfügbar]
+    A[Jupyter Notebook<br/>erstellen & ausführen] --> B[Git Commit & Push]
+    B --> C[GitHub Action<br/>startet automatisch]
+    C --> D[Quarto baut<br/>Website + Downloads]
+    D --> E[GitHub Pages<br/>Deployment]
+    E --> F[Report online<br/>mit PDF/LaTeX/Word]
 
     style A fill:#005a8c,color:#fff
     style B fill:#007cb0,color:#fff
-    style C fill:#00a0d2,color:#fff
+    style C fill:#4a9b5e,color:#fff
     style D fill:#4a9b5e,color:#fff
     style E fill:#4a9b5e,color:#fff
-    style F fill:#4a9b5e,color:#fff
-    style G fill:#005a8c,color:#fff
+    style F fill:#005a8c,color:#fff
 ```
 
 ---
@@ -29,7 +27,7 @@ flowchart LR
 
 ### 1. Jupyter Notebook erstellen & ausführen
 
-Du arbeitest wie gewohnt in deinem Jupyter Notebook. Die Analyse wird lokal durchgeführt - alle Berechnungen, Visualisierungen und Outputs entstehen auf deinem Rechner.
+Du arbeitest wie gewohnt in deinem Jupyter Notebook im Ordner `notebooks/`. Die Analyse wird lokal durchgeführt - alle Berechnungen, Visualisierungen und Outputs entstehen auf deinem Rechner.
 
 **Was du dabei machst:**
 
@@ -42,32 +40,14 @@ Du arbeitest wie gewohnt in deinem Jupyter Notebook. Die Analyse wird lokal durc
 
 ---
 
-### 2. Quarto Render (lokal)
-
-Mit einem einzigen Befehl wird dein Notebook in einen HTML-Report konvertiert:
-
-```bash
-quarto render notebooks/dein-notebook.ipynb --to html -o report-name.html --output-dir reports/
-```
-
-**Was dabei passiert:**
-
-- Quarto liest das Notebook (inkl. aller Outputs)
-- Markdown-Zellen werden zu Text
-- Code-Zellen werden formatiert (optional versteckt)
-- Grafiken werden eingebettet
-- Ein fertige HTML-Datei entsteht im `reports/` Ordner
-
----
-
-### 3. Git Commit & Push
+### 2. Git Commit & Push
 
 Die Änderungen werden versioniert und zu GitHub übertragen:
 
 ```bash
 git add .
 git commit -m "Add: Neue Analyse XY"
-git push origin main
+git push
 ```
 
 **Was dabei passiert:**
@@ -76,9 +56,11 @@ git push origin main
 - Der Commit wird zu GitHub hochgeladen (Push)
 - Die Historie aller Änderungen bleibt erhalten
 
+**Das war's!** Kein lokales Rendern nötig.
+
 ---
 
-### 4. GitHub Action (automatisch)
+### 3. GitHub Action (automatisch)
 
 Sobald der Push bei GitHub ankommt, startet automatisch ein Workflow:
 
@@ -86,27 +68,29 @@ Sobald der Push bei GitHub ankommt, startet automatisch ein Workflow:
 
 - GitHub erkennt den neuen Push
 - Ein virtueller Server wird gestartet
-- Python und Quarto werden installiert
-- Das gesamte Projekt wird neu gebaut
+- Python, Quarto und TinyTeX werden installiert
+- Das gesamte Projekt wird gebaut
 
 Du musst hier **nichts tun** - alles läuft automatisch.
 
 ---
 
-### 5. Quarto baut Website
+### 4. Quarto baut Website + Downloads
 
-Auf dem GitHub-Server wird die komplette Website neu generiert:
+Auf dem GitHub-Server wird die komplette Website und alle Downloads generiert:
 
 **Was dabei passiert:**
 
-- Alle `.qmd` Dateien werden gerendert
-- Die Navigation wird aktualisiert
-- Styles und Templates werden angewendet
-- Eine fertige statische Website entsteht
+- Alle Notebooks werden zu HTML gerendert
+- **PDF-Dateien** werden mit TinyTeX erstellt
+- **LaTeX-Dateien** (.tex) werden generiert
+- **Word-Dateien** (.docx) werden erstellt
+- Die **Downloads-Tabelle** wird automatisch aktualisiert
+- Navigation und Styles werden angewendet
 
 ---
 
-### 6. GitHub Pages Deployment
+### 5. GitHub Pages Deployment
 
 Die fertige Website wird automatisch veröffentlicht:
 
@@ -118,13 +102,14 @@ Die fertige Website wird automatisch veröffentlicht:
 
 ---
 
-### 7. Report online verfügbar
+### 6. Report online mit Downloads
 
-Nach ca. 2-5 Minuten ist der neue Report auf der Website sichtbar.
+Nach ca. 3-5 Minuten ist der neue Report auf der Website sichtbar - inklusive aller Download-Optionen.
 
 **Vorteile:**
 
 - Keine manuelle Veröffentlichung nötig
+- PDF, LaTeX und Word automatisch generiert
 - Automatische Versionierung
 - Immer aktueller Stand
 - Von überall erreichbar
@@ -135,13 +120,12 @@ Nach ca. 2-5 Minuten ist der neue Report auf der Website sichtbar.
 
 | Schritt | Was du tust | Was automatisch passiert |
 |---------|-------------|-------------------------|
-| 1. Notebook | Analyse durchführen | - |
-| 2. Render | `quarto render ...` | Konvertierung zu HTML |
-| 3. Push | `git push` | Upload zu GitHub |
-| 4-6. Deploy | - | Build & Veröffentlichung |
-| 7. Fertig | Link teilen | - |
+| 1. Notebook | Analyse durchführen & ausführen | - |
+| 2. Push | `git add . && git commit && git push` | Upload zu GitHub |
+| 3-5. Deploy | - | HTML, PDF, LaTeX, Word + Veröffentlichung |
+| 6. Fertig | Link teilen | Downloads verfügbar |
 
-Der gesamte Prozess ab dem Push dauert typischerweise **2-5 Minuten**.
+Der gesamte Prozess ab dem Push dauert typischerweise **3-5 Minuten**.
 
 ---
 

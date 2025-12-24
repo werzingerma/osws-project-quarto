@@ -123,43 +123,44 @@ python -m ipykernel install --user --name=precision --display-name="PRECISION Py
 
 ### 3. Notebook erstellen & ausführen
 
-Erstelle dein Jupyter Notebook in VS Code, JupyterLab oder deiner bevorzugten Umgebung.
+Erstelle dein Jupyter Notebook im Ordner `notebooks/` mit VS Code, JupyterLab oder deiner bevorzugten Umgebung.
 
 ::: {.callout-important}
 #### Wichtig
-Das Notebook muss **vollständig ausgeführt** sein, bevor es gerendert wird. Alle Zellen sollten ihre Outputs enthalten.
+Das Notebook muss **vollständig ausgeführt** sein. Alle Zellen sollten ihre Outputs enthalten, damit diese in den generierten Reports erscheinen.
 :::
 
 #### Best Practices für Notebooks
 
 - **Reproduzierbarkeit**: Setze Random Seeds (`np.random.seed(42)`)
 - **Relative Pfade**: Verwende `../data/` statt absolute Pfade
-- **Metadaten im Header**: Füge einen YAML-Header in die erste Markdown-Zelle ein:
+- **Metadaten im Header**: Füge einen YAML-Header in die erste **Raw**-Zelle ein:
 
-```markdown
+```yaml
 ---
 title: "Meine Analyse"
 author: "Dein Name"
-date: 2024-12-23
+date: 2024-12-24
 description: "Kurze Beschreibung der Analyse"
+categories: [Statistik, Analyse]
+format:
+  html:
+    code-fold: true
+execute:
+  warning: false
+  message: false
 ---
 ```
 
----
-
-### 4. Notebook zu Report konvertieren
-
-Führe folgenden Befehl im Projektverzeichnis aus:
-
-```bash
-quarto render notebooks/dein-notebook.ipynb --to html -o dein-report.html --output-dir reports/
-```
-
-Dies erstellt eine HTML-Datei im `reports/` Ordner, die automatisch in der Berichtsliste erscheint.
+::: {.callout-tip}
+#### Raw-Zelle erstellen
+In JupyterLab: Zelle auswählen → Cell Type → Raw
+In VS Code: Zelle-Dropdown → Raw
+:::
 
 #### Lokale Vorschau
 
-Um die gesamte Website lokal zu testen:
+Um die Website lokal zu testen:
 
 ```bash
 quarto preview
@@ -167,48 +168,45 @@ quarto preview
 
 ---
 
-### 5. Veröffentlichen
+### 4. Veröffentlichen
 
 #### Änderungen committen und pushen
 
 ```bash
-# Status prüfen
-git status
-
 # Dateien hinzufügen
 git add .
 
 # Commit erstellen
-git commit -m "Neuer Bericht: Analyse XY"
+git commit -m "Add: Neuer Bericht XY"
 
 # Pushen
-git push origin main
+git push
 ```
+
+Das war's! **Kein lokales Rendern nötig.**
 
 #### Was dann passiert
 
-Nach dem Push läuft automatisch:
+Nach dem Push läuft automatisch (ca. 3-5 Minuten):
 
 1. **GitHub Action** wird gestartet
-2. **Quarto rendert** alle Dokumente (HTML, PDF, DOCX)
-3. **GitHub Pages** wird aktualisiert
-4. **Bericht ist online** mit Download-Buttons für PDF/DOCX
+2. **Quarto rendert** die Website (HTML)
+3. **PDF, LaTeX, Word** werden automatisch generiert
+4. **Downloads-Seite** wird aktualisiert
+5. **GitHub Pages** wird deployed
 
 ---
 
 ### Zusammenfassung: Der schnelle Weg
 
 ```bash
-# 1. Notebook fertigstellen (in JupyterLab/VS Code)
+# 1. Notebook in notebooks/ erstellen und ausführen (JupyterLab/VS Code)
 
-# 2. Rendern
-quarto render notebooks/mein-notebook.ipynb --to html -o mein-report.html --output-dir reports/
-
-# 3. Pushen
-git add . && git commit -m "Add: Mein neuer Report" && git push
+# 2. Pushen - fertig!
+git add . && git commit -m "Add: Neuer Bericht" && git push
 ```
 
-Fertig! Nach wenigen Minuten ist der Bericht online.
+Nach wenigen Minuten ist der Bericht online mit PDF, LaTeX und Word Downloads!
 
 
 ## Publikation & Journal-Export

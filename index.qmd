@@ -49,6 +49,6 @@ Quellcode und Versionierung
 
 | Datum | Beschreibung |
 |-------|--------------|
+| 2024-12-24 | Automatische PDF/LaTeX/Word-Generierung via GitHub Actions |
 | 2024-12-23 | Website-Design aktualisiert |
 | 2024-12-22 | Initiales Setup des Workflows |
-| 2024-12-22 | Beispiel-Notebooks erstellt |

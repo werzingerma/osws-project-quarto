@@ -17,12 +17,11 @@ Hier findest du alle aktuellen Berichte des PRECISION-Projekts. Neue Notebooks w
 ::: {.callout-tip}
 ## Workflow
 1. Notebook in `notebooks/` erstellen und **ausführen**
-2. PDF/LaTeX lokal generieren (siehe [Downloads](downloads.qmd))
-3. Änderungen committen und pushen
-4. GitHub Actions deployed automatisch die Website
+2. Änderungen committen und pushen (`git add . && git commit -m "..." && git push`)
+3. GitHub Actions generiert automatisch HTML, PDF, LaTeX und Word
 :::
 
 ::: {.callout-note}
 ## Downloads
-PDF- und LaTeX-Versionen der Berichte findest du auf der [Downloads-Seite](downloads.qmd).
+PDF, LaTeX und Word-Versionen aller Berichte findest du auf der [Downloads-Seite](downloads.qmd).
 :::
