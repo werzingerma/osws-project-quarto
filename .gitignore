@@ -11,6 +11,7 @@ _site/
 *.html
 !index.html
 *.pdf
+!downloads/*.pdf
 *.docx
 *.pptx
 
