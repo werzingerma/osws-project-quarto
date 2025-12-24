@@ -10,7 +10,7 @@ Hier findest du alle aktuellen Berichte des PRECISION-Projekts. Die Berichte wer
 ::: {.callout-tip}
 ## Lokaler Workflow
 1. Notebook in `notebooks/` fertigstellen und **ausführen**
-2. Report lokal rendern (siehe Befehle unten)
+2. PDF/LaTeX lokal generieren (siehe Befehle unten)
 3. Änderungen committen und pushen
 4. GitHub Actions deployed automatisch die Website
 :::
@@ -33,10 +33,14 @@ Die PDF- und LaTeX-Dateien werden **lokal** generiert und müssen vor dem Push e
 ### PDF mit LaTeX generieren
 
 ```bash
-# PDF + LaTeX generieren (keep-tex behält die .tex Datei)
+# PDF + LaTeX generieren
 quarto render notebooks/beispiel_analyse.ipynb --to pdf \
   -M keep-tex:true \
+  -o beispiel_analyse.pdf \
   --output-dir downloads/
+
+# Danach aufräumen (überflüssige Dateien im notebooks/ Ordner löschen)
+rm -rf notebooks/beispiel_analyse.tex notebooks/beispiel_analyse_files
 ```
 
 ### Journal-Profile verwenden
@@ -46,12 +50,14 @@ quarto render notebooks/beispiel_analyse.ipynb --to pdf \
 quarto render notebooks/beispiel_analyse.ipynb --to pdf \
   --profile springer \
   -M keep-tex:true \
+  -o beispiel_analyse.pdf \
   --output-dir downloads/
 
 # Elsevier-Format
 quarto render notebooks/beispiel_analyse.ipynb --to pdf \
   --profile elsevier \
   -M keep-tex:true \
+  -o beispiel_analyse.pdf \
   --output-dir downloads/
 ```
 
@@ -59,5 +65,4 @@ quarto render notebooks/beispiel_analyse.ipynb --to pdf \
 ## Wichtig
 - Notebooks müssen vor dem Rendern **vollständig ausgeführt** sein
 - TinyTeX muss lokal installiert sein: `quarto install tinytex`
-- Der `downloads/` Ordner muss existieren
 :::
