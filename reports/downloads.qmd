@@ -3,20 +3,46 @@ title: "Downloads"
 subtitle: "PDF und LaTeX Export"
 ---
 
-## Verfügbare Downloads
+```{python}
+#| echo: false
+#| output: asis
 
-Hier findest du alle Berichte als PDF und LaTeX zum Download.
+from pathlib import Path
 
-| Bericht | PDF | LaTeX |
-|---------|-----|-------|
-| Beispiel-Analyse | [PDF](../downloads/beispiel_analyse.pdf) | [LaTeX](../downloads/beispiel_analyse.tex) |
+# Downloads-Ordner finden
+downloads_dir = Path("../downloads")
 
-: {.striped .hover}
+# Alle PDF und TEX Dateien sammeln
+pdfs = sorted(downloads_dir.glob("*.pdf"))
+texs = sorted(downloads_dir.glob("*.tex"))
 
-::: {.callout-warning}
-## Hinweis
-Diese Liste muss manuell gepflegt werden. Nach dem Erstellen eines neuen Berichts hier einen Eintrag hinzufügen.
-:::
+if pdfs or texs:
+    print("## Verfügbare Downloads\n")
+    print("| Bericht | PDF | LaTeX |")
+    print("|---------|-----|-------|")
+
+    # Alle PDFs durchgehen und passende TEX suchen
+    seen = set()
+    for pdf in pdfs:
+        name = pdf.stem
+        seen.add(name)
+        tex_exists = (downloads_dir / f"{name}.tex").exists()
+
+        pdf_link = f"[PDF](../downloads/{name}.pdf)"
+        tex_link = f"[LaTeX](../downloads/{name}.tex)" if tex_exists else "-"
+
+        print(f"| {name} | {pdf_link} | {tex_link} |")
+
+    # TEX-Dateien ohne PDF
+    for tex in texs:
+        name = tex.stem
+        if name not in seen:
+            print(f"| {name} | - | [LaTeX](../downloads/{name}.tex) |")
+else:
+    print("::: {.callout-info}")
+    print("Noch keine Downloads vorhanden.")
+    print(":::")
+```
 
 ---
 
@@ -25,32 +51,21 @@ Diese Liste muss manuell gepflegt werden. Nach dem Erstellen eines neuen Bericht
 ### PDF mit LaTeX generieren
 
 ```bash
-# PDF + LaTeX generieren
+# In das Projektverzeichnis wechseln
+cd /pfad/zu/osws-project-quarto
+
+# PDF generieren (LaTeX wird im notebooks/ Ordner erstellt)
 quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
   -M keep-tex:true \
   -o NOTEBOOK_NAME.pdf \
   --output-dir downloads/
+
+# LaTeX-Datei in downloads/ verschieben
+mv notebooks/NOTEBOOK_NAME.tex downloads/
 
 # Aufräumen
-rm -rf notebooks/NOTEBOOK_NAME.tex notebooks/NOTEBOOK_NAME_files
-```
-
-### Journal-Profile verwenden
-
-```bash
-# Springer-Format
-quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
-  --profile springer \
-  -M keep-tex:true \
-  -o NOTEBOOK_NAME.pdf \
-  --output-dir downloads/
-
-# Elsevier-Format
-quarto render notebooks/NOTEBOOK_NAME.ipynb --to pdf \
-  --profile elsevier \
-  -M keep-tex:true \
-  -o NOTEBOOK_NAME.pdf \
-  --output-dir downloads/
+rm -rf notebooks/NOTEBOOK_NAME_files
+rm -rf downloads/_site downloads/index.html downloads/robots.txt downloads/sitemap.xml downloads/notebooks
 ```
 
 ::: {.callout-tip}

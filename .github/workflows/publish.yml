@@ -28,13 +28,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
           version: '1.4.553'
 
-      - name: Render Quarto Project (nur HTML)
+      - name: Render Quarto Project
         run: |
+          # Downloads-Seite mit Python ausführen, Rest ohne
+          quarto render reports/downloads.qmd
           quarto render --no-execute
 
       - name: Upload Pages Artifact
