@@ -1,6 +1,7 @@
 ---
 title: "Downloads"
 subtitle: "PDF, LaTeX und Word Export"
+listing: false
 ---
 
 ## Verfügbare Downloads
